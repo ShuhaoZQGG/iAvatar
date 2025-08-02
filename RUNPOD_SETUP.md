@@ -266,10 +266,23 @@ bash scripts/download_models.sh
 - Monitor usage: `nvidia-smi`
 - Reduce batch size if needed
 
+### Library Issues
+```bash
+# If test_gpu.py shows missing libraries:
+pip install -r requirements.txt
+
+# For specific library errors:
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
 ### API Errors
 ```bash
-# Check logs
-tail -f /workspace/iAvatar/logs.txt
+# Test environment first
+python3 test_gpu.py
+
+# Check API logs
+cd /workspace/iAvatar
+python3 main.py  # Check startup logs
 
 # Test SadTalker directly
 cd /workspace/SadTalker
