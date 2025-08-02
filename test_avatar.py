@@ -137,11 +137,11 @@ def main():
     print(f"  - Audio: {audio_file} ({os.path.getsize(audio_file)} bytes)")
     
     # Get API URL from user
-    api_url = input("\n🌐 Enter your RunPod API URL (e.g., http://123.456.789.10:8000): ").strip()
+    api_url = input("\n🌐 Enter your RunPod API URL (default: http://0.0.0.0:8000): ").strip()
     
     if not api_url:
-        print("❌ No API URL provided")
-        return
+        api_url = "http://0.0.0.0:8000"
+        print(f"Using default URL: {api_url}")
     
     # Remove trailing slash
     api_url = api_url.rstrip('/')
