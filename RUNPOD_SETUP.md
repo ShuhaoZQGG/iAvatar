@@ -63,7 +63,10 @@ cd /workspace
 git clone https://github.com/OpenTalker/SadTalker.git
 cd SadTalker
 
-# Install dependencies
+# Install system dependencies (required for video processing)
+apt update && apt install -y ffmpeg
+
+# Install Python dependencies
 pip install -r requirements.txt
 
 # Download pretrained models (5-10 minutes)
@@ -72,11 +75,23 @@ bash scripts/download_models.sh
 
 ### Verify Installation
 ```bash
+# Check ffmpeg installed
+ffmpeg -version
+
 # Check models downloaded
 ls -la checkpoints/
 ls -la gfpgan/weights/
 
-# Should see multiple .pth files
+# Should see multiple .pth and .safetensors files (hundreds of MB each)
+
+# Test SadTalker with examples
+python inference.py \
+  --driven_audio examples/driven_audio/bus_chinese.wav \
+  --source_image examples/source_image/happy.png \
+  --result_dir results \
+  --preprocess crop
+
+# Should create video in results/ folder without errors
 ```
 
 ## 🔧 Step 4: Setup iAvatar API Service
@@ -214,13 +229,16 @@ git clone https://github.com/ShuhaoZQGG/iAvatar.git
 cd iAvatar
 pip install -r requirements.txt
 
-# 4. Verify environment
+# 4. Install system dependencies (if needed)
+apt update && apt install -y ffmpeg
+
+# 5. Verify environment
 python3 test_gpu.py
 
-# 5. SadTalker should still exist from network volume
+# 6. SadTalker should still exist from network volume
 ls -la /workspace/SadTalker
 
-# 6. Start service
+# 7. Start service
 python3 main.py
 ```
 
@@ -254,6 +272,12 @@ nvidia-smi
 ```bash
 cd /workspace/SadTalker
 bash scripts/download_models.sh
+
+# If models are corrupted (0 MB files), remove and redownload
+ls -lh checkpoints/*.safetensors
+# Remove any 0 MB files:
+# rm checkpoints/SadTalker_V002.safetensors
+# bash scripts/download_models.sh
 ```
 
 ### Port Access Issues
@@ -275,6 +299,23 @@ pip install -r requirements.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
+### Video Generation Errors
+```bash
+# Check if ffmpeg is installed
+ffmpeg -version
+
+# If not installed:
+apt update && apt install -y ffmpeg
+
+# Test SadTalker directly with examples
+cd /workspace/SadTalker
+python inference.py \
+  --driven_audio examples/driven_audio/bus_chinese.wav \
+  --source_image examples/source_image/happy.png \
+  --result_dir results \
+  --preprocess crop
+```
+
 ### API Errors
 ```bash
 # Test environment first
@@ -284,9 +325,8 @@ python3 test_gpu.py
 cd /workspace/iAvatar
 python3 main.py  # Check startup logs
 
-# Test SadTalker directly
-cd /workspace/SadTalker
-python inference.py --help
+# Test with real examples
+python3 test_avatar.py
 ```
 
 ## 💰 Cost Optimization
