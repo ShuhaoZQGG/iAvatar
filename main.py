@@ -26,10 +26,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global variables
-SADTALKER_PATH = "/app/SadTalker"
-OUTPUT_DIR = "/app/outputs"
-TEMP_DIR = "/app/temp"
+# Environment variables with defaults
+SADTALKER_PATH = os.getenv("SADTALKER_PATH", "/workspace/SadTalker")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "/workspace/iAvatar/outputs")
+TEMP_DIR = os.getenv("TEMP_DIR", "/workspace/iAvatar/temp")
 
 # Ensure directories exist
 os.makedirs(OUTPUT_DIR, exist_ok=True)
