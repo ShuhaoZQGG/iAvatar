@@ -91,9 +91,12 @@ class SadTalkerGenerator:
                 "--driven_audio", audio_path,
                 "--source_image", image_path,
                 "--result_dir", os.path.dirname(output_path),
-                "--preprocess", preprocess,
-                "--cpu" if not self._has_gpu() else "--gpu"
+                "--preprocess", preprocess
             ]
+            
+            # Add CPU flag only if no GPU available
+            if not self._has_gpu():
+                cmd.append("--cpu")
             
             if still:
                 cmd.append("--still")
