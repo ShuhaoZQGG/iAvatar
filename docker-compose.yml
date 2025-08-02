@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  iavatar-api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./temp:/app/temp
+      - ./SadTalker:/app/SadTalker
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - PYTHONPATH=/app/SadTalker
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
