@@ -41,11 +41,15 @@ ssh root@173.252.74.22 -p 22476
 
 ### Verify Environment
 ```bash
-# Check GPU
+# Quick GPU check
 nvidia-smi
 
-# Check Python/CUDA
-python3 -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
+# Comprehensive system test (recommended)
+cd /workspace/iAvatar
+python3 test_gpu.py
+
+# Should show:
+# 🎉 All tests passed! Ready for SadTalker.
 ```
 
 ## 📦 Step 3: Install SadTalker
@@ -210,22 +214,40 @@ git clone https://github.com/ShuhaoZQGG/iAvatar.git
 cd iAvatar
 pip install -r requirements.txt
 
-# 4. SadTalker should still exist from network volume
+# 4. Verify environment
+python3 test_gpu.py
+
+# 5. SadTalker should still exist from network volume
 ls -la /workspace/SadTalker
 
-# 5. Start service
+# 6. Start service
 python3 main.py
 ```
 
 ## 🔧 Troubleshooting
+
+### Comprehensive Diagnostics
+```bash
+# Run full system test
+cd /workspace/iAvatar
+python3 test_gpu.py
+
+# This will check:
+# - NVIDIA drivers and GPU detection
+# - PyTorch CUDA availability  
+# - All required ML libraries
+# - System information
+```
 
 ### GPU Not Available
 ```bash
 # Check NVIDIA drivers
 nvidia-smi
 
-# Verify PyTorch CUDA
-python3 -c "import torch; print(torch.cuda.is_available())"
+# If nvidia-smi fails:
+# - Pod may not have GPU allocated
+# - Try different GPU type or region
+# - Switch to on-demand if spot unavailable
 ```
 
 ### SadTalker Models Missing
